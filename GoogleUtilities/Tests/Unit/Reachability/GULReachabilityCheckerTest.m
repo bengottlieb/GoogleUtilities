@@ -224,7 +224,7 @@ static const struct GULReachabilityApi kTestReachabilityApi = {
                  (int)kGULReachabilityNotReachable, @"");
   XCTAssertEqual(checker_.reachabilityStatus, kGULReachabilityNotReachable, @"");
 
-#if TARGET_OS_IOS || TARGET_OS_TV
+#if TARGET_OS_IOS || TARGET_OS_VISION || TARGET_OS_TV
   FakeReachability.callback(
       kFakeReachabilityObject,
       kSCNetworkReachabilityFlagsReachable | kSCNetworkReachabilityFlagsIsWWAN,

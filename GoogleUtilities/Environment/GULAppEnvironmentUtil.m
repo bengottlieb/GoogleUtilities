@@ -21,7 +21,7 @@
 
 #import "third_party/IsAppEncrypted/Public/IsAppEncrypted.h"
 
-#if TARGET_OS_IOS
+#if TARGET_OS_IOS || TARGET_OS_VISION
 #import <UIKit/UIKit.h>
 #endif
 
@@ -37,7 +37,7 @@ static NSString *const kFIRAppStoreReceiptURLCheckEnabledKey =
 static NSString *const kFIRAIdentitySandboxReceiptFileName = @"sandboxReceipt";
 
 static BOOL HasSCInfoFolder(void) {
-#if TARGET_OS_IOS || TARGET_OS_TV || TARGET_OS_WATCH
+#if TARGET_OS_IOS || TARGET_OS_TV || TARGET_OS_WATCH || TARGET_OS_VISION
   NSString *bundlePath = [NSBundle mainBundle].bundlePath;
   NSString *scInfoPath = [bundlePath stringByAppendingPathComponent:@"SC_Info"];
   return [[NSFileManager defaultManager] fileExistsAtPath:scInfoPath];
@@ -47,7 +47,7 @@ static BOOL HasSCInfoFolder(void) {
 }
 
 static BOOL HasEmbeddedMobileProvision(void) {
-#if TARGET_OS_IOS || TARGET_OS_TV || TARGET_OS_WATCH
+#if TARGET_OS_IOS || TARGET_OS_VISION || TARGET_OS_TV || TARGET_OS_WATCH
   return [[NSBundle mainBundle] pathForResource:@"embedded" ofType:@"mobileprovision"].length > 0;
 #elif TARGET_OS_OSX
   return NO;
@@ -106,7 +106,7 @@ static BOOL HasEmbeddedMobileProvision(void) {
   return YES;
 #elif TARGET_OS_MACCATALYST
   return NO;
-#elif TARGET_OS_IOS || TARGET_OS_TV
+#elif TARGET_OS_IOS || TARGET_OS_VISION || TARGET_OS_TV
   NSString *platform = [GULAppEnvironmentUtil deviceModel];
   return [platform isEqual:@"x86_64"] || [platform isEqual:@"i386"];
 #elif TARGET_OS_OSX
@@ -169,7 +169,7 @@ static BOOL HasEmbeddedMobileProvision(void) {
     model = @"tvOS Simulator";
 #elif defined(TARGET_OS_VISION) && TARGET_OS_VISION
     model = @"visionOS Simulator";
-#elif TARGET_OS_IOS
+#elif TARGET_OS_IOS || TARGET_OS_VISION
     switch ([[UIDevice currentDevice] userInterfaceIdiom]) {
       case UIUserInterfaceIdiomPhone:
         model = @"iOS Simulator (iPhone)";
@@ -193,10 +193,9 @@ static BOOL HasEmbeddedMobileProvision(void) {
 }
 
 + (NSString *)systemVersion {
-#if TARGET_OS_IOS
+#if TARGET_OS_IOS || TARGET_OS_VISION
   return [UIDevice currentDevice].systemVersion;
-#elif TARGET_OS_OSX || TARGET_OS_TV || TARGET_OS_WATCH || \
-    (defined(TARGET_OS_VISION) && TARGET_OS_VISION)
+#elif TARGET_OS_OSX || TARGET_OS_TV || TARGET_OS_WATCH
   // Assemble the systemVersion, excluding the patch version if it's 0.
   NSOperatingSystemVersion osVersion = [NSProcessInfo processInfo].operatingSystemVersion;
   NSMutableString *versionString = [[NSMutableString alloc]
@@ -209,7 +208,7 @@ static BOOL HasEmbeddedMobileProvision(void) {
 }
 
 + (BOOL)isAppExtension {
-#if TARGET_OS_IOS || TARGET_OS_TV || TARGET_OS_WATCH
+#if TARGET_OS_IOS || TARGET_OS_VISION || TARGET_OS_TV || TARGET_OS_WATCH
   // Documented by <a href="https://goo.gl/RRB2Up">Apple</a>
   BOOL appExtension = [[[NSBundle mainBundle] bundlePath] hasSuffix:@".appex"];
   return appExtension;
@@ -243,7 +242,7 @@ static BOOL HasEmbeddedMobileProvision(void) {
   // `true`, which means the condition list is order-sensitive.
 #if TARGET_OS_MACCATALYST
   applePlatform = @"maccatalyst";
-#elif TARGET_OS_IOS && (!defined(TARGET_OS_VISION) || !TARGET_OS_VISION)
+#elif TARGET_OS_IOS || TARGET_OS_VISION
 #if defined(__IPHONE_14_0) && __IPHONE_OS_VERSION_MAX_ALLOWED >= 140000
   if (@available(iOS 14.0, *)) {
     // Early iOS 14 betas do not include isiOSAppOnMac (#6969)
@@ -273,7 +272,7 @@ static BOOL HasEmbeddedMobileProvision(void) {
 
 + (NSString *)appleDevicePlatform {
   NSString *firebasePlatform = [GULAppEnvironmentUtil applePlatform];
-#if TARGET_OS_IOS
+#if TARGET_OS_IOS || TARGET_OS_VISION
   // This check is necessary because iOS-only apps running on iPad
   // will report UIUserInterfaceIdiomPhone via UI_USER_INTERFACE_IDIOM().
   if ([firebasePlatform isEqualToString:@"ios"] &&

@@ -84,7 +84,7 @@
   // `true`.
 #if TARGET_OS_MACCATALYST
   NSString *expectedPlatform = @"maccatalyst";
-#elif TARGET_OS_IOS && (!defined(TARGET_OS_VISION) || !TARGET_OS_VISION)
+#elif TARGET_OS_IOS || TARGET_OS_VISION && (!defined(TARGET_OS_VISION) || !TARGET_OS_VISION)
   NSString *expectedPlatform = @"ios";
 #endif  // TARGET_OS_MACCATALYST
 
@@ -112,7 +112,7 @@
   // `true`.
 #if TARGET_OS_MACCATALYST
   NSString *expectedPlatform = @"maccatalyst";
-#elif TARGET_OS_IOS && (!defined(TARGET_OS_VISION) || !TARGET_OS_VISION)
+#elif TARGET_OS_IOS || TARGET_OS_VISION
   NSString *expectedPlatform = @"ios";
 
   if ([[UIDevice currentDevice].model.lowercaseString containsString:@"ipad"] ||

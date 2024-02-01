@@ -282,7 +282,7 @@
   }
 }
 
-#if TARGET_OS_IOS || TARGET_OS_TV
+#if TARGET_OS_IOS || TARGET_OS_VISION || TARGET_OS_TV
 - (void)URLSessionDidFinishEventsForBackgroundURLSession:(NSURLSession *)session
     API_AVAILABLE(ios(7.0)) {
   [_loggerDelegate GULNetwork_logWithLevel:kGULNetworkLogLevelDebug

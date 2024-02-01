@@ -379,7 +379,7 @@ static dispatch_once_t sProxyAppDelegateRemoteNotificationOnceToken;
                               realClass:realClass
        storeDestinationImplementationTo:realImplementationsBySelector];
 
-#if TARGET_OS_IOS || TARGET_OS_TV
+#if TARGET_OS_IOS || TARGET_OS_TV || TARGET_OS_VISION
   // Add the following methods from GULAppDelegate class, and store the real implementation so it
   // can forward to the real one.
   // For application:openURL:options:
@@ -407,9 +407,9 @@ static dispatch_once_t sProxyAppDelegateRemoteNotificationOnceToken;
                                 toClass:appDelegateSubClass
                               realClass:realClass
        storeDestinationImplementationTo:realImplementationsBySelector];
-#endif  // TARGET_OS_IOS || TARGET_OS_TV
+#endif  // TARGET_OS_IOS || TARGET_OS_TV || TARGET_OS_VISION
 
-#if TARGET_OS_IOS
+#if TARGET_OS_IOS || TARGET_OS_VISION
   // For application:openURL:sourceApplication:annotation:
   SEL openURLSourceApplicationAnnotationSEL = @selector(application:
                                                             openURL:sourceApplication:annotation:);
@@ -420,7 +420,7 @@ static dispatch_once_t sProxyAppDelegateRemoteNotificationOnceToken;
                                 toClass:appDelegateSubClass
                               realClass:realClass
        storeDestinationImplementationTo:realImplementationsBySelector];
-#endif  // TARGET_OS_IOS
+#endif  // TARGET_OS_IOS || TARGET_OS_VISION
 
   // Override the description too so the custom class name will not show up.
   [GULAppDelegateSwizzler addInstanceMethodWithDestinationSelector:@selector(description)
@@ -688,7 +688,7 @@ static dispatch_once_t sProxyAppDelegateRemoteNotificationOnceToken;
 }
 
 #pragma mark - [Donor Methods] URL overridden handler methods
-#if TARGET_OS_IOS || TARGET_OS_TV
+#if TARGET_OS_IOS || TARGET_OS_TV || TARGET_OS_VISION
 
 - (BOOL)application:(GULApplication *)application
             openURL:(NSURL *)url
@@ -718,11 +718,11 @@ static dispatch_once_t sProxyAppDelegateRemoteNotificationOnceToken;
   return returnedValue;
 }
 
-#endif  // TARGET_OS_IOS || TARGET_OS_TV
+#endif  // TARGET_OS_IOS || TARGET_OS_TV || TARGET_OS_VISION
 
 // TODO(Xcode 15): When Xcode 15 is the minimum supported Xcode version,
 // it will be unnecessary to check if `TARGET_OS_VISION` is defined.
-#if TARGET_OS_IOS && (!defined(TARGET_OS_VISION) || !TARGET_OS_VISION)
+#if TARGET_OS_IOS || TARGET_OS_VISION
 
 - (BOOL)application:(GULApplication *)application
               openURL:(NSURL *)url
@@ -755,11 +755,11 @@ static dispatch_once_t sProxyAppDelegateRemoteNotificationOnceToken;
   return returnedValue;
 }
 
-#endif  // TARGET_OS_IOS && (!defined(TARGET_OS_VISION) || !TARGET_OS_VISION)
+#endif  // TARGET_OS_IOS || TARGET_OS_VISION
 
 #pragma mark - [Donor Methods] Network overridden handler methods
 
-#if TARGET_OS_IOS || TARGET_OS_TV
+#if TARGET_OS_IOS || TARGET_OS_TV || TARGET_OS_VISION
 
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wstrict-prototypes"
@@ -788,7 +788,7 @@ static dispatch_once_t sProxyAppDelegateRemoteNotificationOnceToken;
   }
 }
 
-#endif  // TARGET_OS_IOS || TARGET_OS_TV
+#endif  // TARGET_OS_IOS || TARGET_OS_TV || TARGET_OS_VISION
 
 #pragma mark - [Donor Methods] User Activities overridden handler methods
 

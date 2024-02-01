@@ -70,9 +70,9 @@ static NSString *const kGULGoogleAppDelegateProxyEnabledPlistKey =
 @property(nonatomic, strong) NSError *failToRegisterForRemoteNotificationsError;
 @property(nonatomic, strong) NSDictionary *remoteNotification;
 
-#if TARGET_OS_IOS || TARGET_OS_TV
+#if TARGET_OS_IOS || TARGET_OS_VISION || TARGET_OS_TV
 @property(nonatomic, copy) void (^remoteNotificationCompletionHandler)(UIBackgroundFetchResult);
-#endif  // TARGET_OS_IOS || TARGET_OS_TV
+#endif  // TARGET_OS_IOS || TARGET_OS_VISION || TARGET_OS_TV
 
 /**
  * The application is set each time a GULApplicationDelegate method is called
@@ -173,7 +173,7 @@ static BOOL gRespondsToHandleBackgroundSession;
 }
 #pragma clang diagnostic pop
 
-#if TARGET_OS_IOS || TARGET_OS_TV
+#if TARGET_OS_IOS || TARGET_OS_VISION || TARGET_OS_TV
 
 - (void)application:(GULApplication *)application
     didReceiveRemoteNotification:(NSDictionary *)userInfo
@@ -183,7 +183,7 @@ static BOOL gRespondsToHandleBackgroundSession;
   self.remoteNotificationCompletionHandler = completionHandler;
 }
 
-#endif  // TARGET_OS_IOS || TARGET_OS_TV
+#endif  // TARGET_OS_IOS || TARGET_OS_VISION || TARGET_OS_TV
 
 // These are methods to test whether changing the class still maintains behavior that the app
 // delegate proxy shouldn't have modified.
@@ -300,7 +300,7 @@ static BOOL gRespondsToHandleBackgroundSession;
       respondsToSelector:@selector(application:didFailToRegisterForRemoteNotificationsWithError:)]);
   XCTAssertTrue([realAppDelegate respondsToSelector:@selector(application:
                                                         didReceiveRemoteNotification:)]);
-#if TARGET_OS_IOS || TARGET_OS_TV
+#if TARGET_OS_IOS || TARGET_OS_VISION || TARGET_OS_TV
   XCTAssertTrue([realAppDelegate respondsToSelector:@selector(application:openURL:options:)]);
   XCTAssertTrue([realAppDelegate
       respondsToSelector:@selector(application:
@@ -308,7 +308,7 @@ static BOOL gRespondsToHandleBackgroundSession;
   XCTAssertTrue([realAppDelegate
       respondsToSelector:@selector(application:
                              didReceiveRemoteNotification:fetchCompletionHandler:)]);
-#endif  // TARGET_OS_IOS || TARGET_OS_TV
+#endif  // TARGET_OS_IOS || TARGET_OS_VISION || TARGET_OS_TV
 
   // Make sure that the class has changed.
   XCTAssertNotEqualObjects([realAppDelegate class], realAppDelegateClassBefore);
@@ -353,7 +353,7 @@ static BOOL gRespondsToHandleBackgroundSession;
       respondsToSelector:@selector(application:didFailToRegisterForRemoteNotificationsWithError:)]);
   XCTAssertFalse([realAppDelegate respondsToSelector:@selector(application:
                                                          didReceiveRemoteNotification:)]);
-#if TARGET_OS_IOS || TARGET_OS_TV
+#if TARGET_OS_IOS || TARGET_OS_VISION || TARGET_OS_TV
   // The implementation should not be added if there is no original implementation
   XCTAssertFalse([realAppDelegate respondsToSelector:@selector(application:openURL:options:)]);
   XCTAssertTrue([realAppDelegate
@@ -362,7 +362,7 @@ static BOOL gRespondsToHandleBackgroundSession;
   XCTAssertFalse([realAppDelegate
       respondsToSelector:@selector(application:
                              didReceiveRemoteNotification:fetchCompletionHandler:)]);
-#endif  // TARGET_OS_IOS || TARGET_OS_TV
+#endif  // TARGET_OS_IOS || TARGET_OS_VISION || TARGET_OS_TV
 
   // Make sure that the class has changed.
   XCTAssertNotEqualObjects([realAppDelegate class], realAppDelegateClassBefore);
@@ -402,7 +402,7 @@ static BOOL gRespondsToHandleBackgroundSession;
   XCTAssertTrue([realAppDelegate respondsToSelector:@selector(application:
                                                         didReceiveRemoteNotification:)]);
 
-#if TARGET_OS_IOS || TARGET_OS_TV
+#if TARGET_OS_IOS || TARGET_OS_VISION || TARGET_OS_TV
   // The implementation should not be added if there is no original implementation
   XCTAssertFalse([realAppDelegate respondsToSelector:@selector(application:openURL:options:)]);
 
@@ -415,7 +415,7 @@ static BOOL gRespondsToHandleBackgroundSession;
       respondsToSelector:@selector(application:
                              didReceiveRemoteNotification:fetchCompletionHandler:)]);
 
-#endif  // TARGET_OS_IOS || TARGET_OS_TV
+#endif  // TARGET_OS_IOS || TARGET_OS_VISION || TARGET_OS_TV
 
   // Make sure that the class has changed.
   XCTAssertNotEqualObjects([realAppDelegate class], realAppDelegateClassBefore);
@@ -454,7 +454,7 @@ static BOOL gRespondsToHandleBackgroundSession;
       respondsToSelector:@selector(application:didFailToRegisterForRemoteNotificationsWithError:)]);
   XCTAssertTrue([realAppDelegate respondsToSelector:@selector(application:
                                                         didReceiveRemoteNotification:)]);
-#if TARGET_OS_IOS || TARGET_OS_TV
+#if TARGET_OS_IOS || TARGET_OS_VISION || TARGET_OS_TV
   // The implementation should not be added if there is no original implementation
   XCTAssertFalse([realAppDelegate respondsToSelector:@selector(application:openURL:options:)]);
   XCTAssertTrue([realAppDelegate
@@ -465,7 +465,7 @@ static BOOL gRespondsToHandleBackgroundSession;
   XCTAssertFalse([realAppDelegate
       respondsToSelector:@selector(application:
                              didReceiveRemoteNotification:fetchCompletionHandler:)]);
-#endif  // TARGET_OS_IOS || TARGET_OS_TV
+#endif  // TARGET_OS_IOS || TARGET_OS_VISION || TARGET_OS_TV
 
   // Make sure that the class has changed.
   XCTAssertNotEqualObjects([realAppDelegate class], realAppDelegateClassBefore);
@@ -617,7 +617,7 @@ static BOOL gRespondsToHandleBackgroundSession;
 
 #pragma mark - Tests the behaviour with interceptors
 
-#if TARGET_OS_IOS || TARGET_OS_TV
+#if TARGET_OS_IOS || TARGET_OS_VISION || TARGET_OS_TV
 /** Tests that application:openURL:options: is invoked on the interceptor if it exists. */
 - (void)testApplicationOpenURLOptionsIsInvokedOnInterceptors {
   if (@available(iOS 10, *)) {
@@ -691,9 +691,9 @@ static BOOL gRespondsToHandleBackgroundSession;
     XCTAssertTrue(shouldOpen);
   }
 }
-#endif  // TARGET_OS_IOS || TARGET_OS_TV
+#endif  // TARGET_OS_IOS || TARGET_OS_VISION || TARGET_OS_TV
 
-#if TARGET_OS_IOS || TARGET_OS_TV
+#if TARGET_OS_IOS || TARGET_OS_VISION || TARGET_OS_TV
 /** Tests that application:handleEventsForBackgroundURLSession:completionHandler: is invoked on the
  *  interceptors if it exists.
  */
@@ -728,7 +728,7 @@ static BOOL gRespondsToHandleBackgroundSession;
   XCTAssertEqual(testAppDelegate.application, [GULApplication sharedApplication]);
   XCTAssertEqual(testAppDelegate->_backgroundSessionID, backgroundSessionID);
 }
-#endif  // TARGET_OS_IOS || TARGET_OS_TV
+#endif  // TARGET_OS_IOS || TARGET_OS_VISION || TARGET_OS_TV
 
 /** Tests that application:continueUserActivity:restorationHandler: is invoked on the interceptors
  *  if it exists.
@@ -873,7 +873,7 @@ static BOOL gRespondsToHandleBackgroundSession;
 
 // TODO(Xcode 15): When Xcode 15 is the minimum supported Xcode version,
 // it will be unnecessary to check if `TARGET_OS_VISION` is defined.
-#if TARGET_OS_IOS && (!defined(TARGET_OS_VISION) || !TARGET_OS_VISION)
+#if TARGET_OS_IOS || TARGET_OS_VISION
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wdeprecated-declarations"
 - (void)testApplicationDidReceiveRemoteNotificationIsInvokedOnInterceptors {
@@ -903,7 +903,7 @@ static BOOL gRespondsToHandleBackgroundSession;
 #pragma clang diagnostic pop
 #endif  // TARGET_OS_IOS && (!defined(TARGET_OS_VISION) || !TARGET_OS_VISION)
 
-#if (TARGET_OS_IOS || TARGET_OS_TV) && !TARGET_OS_MACCATALYST
+#if (TARGET_OS_IOS || TARGET_OS_VISION || TARGET_OS_TV) && !TARGET_OS_MACCATALYST
 - (void)testApplicationDidReceiveRemoteNotificationWithCompletionIsInvokedOnInterceptors {
   NSDictionary *notification = @{};
   GULApplication *application = [GULApplication sharedApplication];
@@ -1055,7 +1055,7 @@ static BOOL gRespondsToHandleBackgroundSession;
       respondsToSelector:@selector(application:
                              didReceiveRemoteNotification:fetchCompletionHandler:)]);
 }
-#endif  // TARGET_OS_IOS || TARGET_OS_TV
+#endif  // TARGET_OS_IOS || TARGET_OS_VISION || TARGET_OS_TV
 
 #pragma mark - Tests to test that Plist flag is honored
 
